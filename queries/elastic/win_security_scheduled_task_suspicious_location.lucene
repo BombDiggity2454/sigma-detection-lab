@@ -1,0 +1,3 @@
+// Scheduled Task Created That Runs From a Suspicious Location
+// source: rules/windows/security/win_security_scheduled_task_suspicious_location.yml
+winlog.channel:Security AND (winlog.event_data.source:WinEventLog\:Security AND (winlog.event_data.EventCode:4698 AND ((winlog.event_data.TaskContent:(*\\AppData\\Local\\Temp\\* OR *\\Users\\Public\\* OR *C\:\\Windows\\Temp\\* OR *\\Downloads\\* OR *C\:\\PerfLogs\\*)) OR (winlog.event_data.TaskContent:(*mshta* OR *wscript* OR *cscript* OR *regsvr32* OR *\-enc\ * OR *FromBase64String*)))))

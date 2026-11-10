@@ -1,0 +1,44 @@
+title: Suspicious Process Opened LSASS With Memory-Read Access
+id: bbc3a4e7-e2eb-447c-a0aa-9f2b95034e78
+status: experimental
+description: |
+  Detects a process opening a handle to lsass.exe with access rights that allow
+  reading its memory. This is how credential dumpers (Mimikatz, ProcDump,
+  comsvcs.dll MiniDump, nanodump) extract password hashes and Kerberos tickets.
+  Known-good system and security processes are excluded by FULL PATH, so a
+  malicious binary renamed to a trusted name in another folder still alerts.
+references:
+  - https://attack.mitre.org/techniques/T1003/001/
+  - https://learn.microsoft.com/en-us/windows/win32/procthread/process-security-and-access-rights
+author: BombDiggity2454
+date: 2026-11-09
+tags:
+  - attack.credential-access
+  - attack.t1003.001
+logsource:
+  product: windows
+  category: process_access
+detection:
+  selection:
+    TargetImage|endswith: '\lsass.exe'
+    GrantedAccess:
+      - '0x1010'    # QUERY_LIMITED_INFORMATION | VM_READ  (Mimikatz sekurlsa)
+      - '0x1410'    # + QUERY_INFORMATION
+      - '0x1438'    # + VM_OPERATION | VM_WRITE
+      - '0x143a'
+      - '0x1fffff'  # PROCESS_ALL_ACCESS (ProcDump, comsvcs MiniDump)
+      - '0x1f3fff'
+  filter_main_system:
+    SourceImage:
+      - 'C:\Windows\System32\wininit.exe'
+      - 'C:\Windows\System32\csrss.exe'
+      - 'C:\Windows\System32\lsm.exe'
+  filter_main_defender:
+    SourceImage|startswith: 'C:\ProgramData\Microsoft\Windows Defender\Platform\'
+    SourceImage|endswith: '\MsMpEng.exe'
+  condition: selection and not 1 of filter_main_*
+falsepositives:
+  - EDR, AV and vulnerability-scanner agents not listed in the filters. Add
+    them by full path after confirming the binary signature.
+  - Administrators deliberately creating LSASS dumps for Microsoft support.
+level: high

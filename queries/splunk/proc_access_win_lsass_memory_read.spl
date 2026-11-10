@@ -1,0 +1,3 @@
+// Suspicious Process Opened LSASS With Memory-Read Access
+// source: rules/windows/process_access/proc_access_win_lsass_memory_read.yml
+TargetImage="*\\lsass.exe" GrantedAccess IN ("0x1010", "0x1410", "0x1438", "0x143a", "0x1fffff", "0x1f3fff") NOT (SourceImage IN ("C:\\Windows\\System32\\wininit.exe", "C:\\Windows\\System32\\csrss.exe", "C:\\Windows\\System32\\lsm.exe") OR (SourceImage="C:\\ProgramData\\Microsoft\\Windows Defender\\Platform\\*" SourceImage="*\\MsMpEng.exe"))

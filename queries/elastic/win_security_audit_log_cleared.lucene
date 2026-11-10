@@ -1,0 +1,3 @@
+// Security Event Log Cleared
+// source: rules/windows/security/win_security_audit_log_cleared.yml
+winlog.channel:Security AND (winlog.event_data.source:WinEventLog\:Security AND winlog.event_data.EventCode:1102)

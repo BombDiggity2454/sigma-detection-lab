@@ -1,0 +1,3 @@
+// Certutil Used to Download a File
+// source: rules/windows/process_creation/proc_creation_win_certutil_download.yml
+Image="*\\certutil.exe" OR OriginalFileName="CertUtil.exe" CommandLine IN ("*urlcache*", "*verifyctl*")

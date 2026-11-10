@@ -1,0 +1,3 @@
+// Certutil Used to Download a File
+// source: rules/windows/process_creation/proc_creation_win_certutil_download.yml
+(process.executable.caseless:*\\certutil.exe OR process.pe.original_file_name:CertUtil.exe) AND (process.command_line:(*urlcache* OR *verifyctl*))

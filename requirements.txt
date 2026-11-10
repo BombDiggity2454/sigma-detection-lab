@@ -1,0 +1,6 @@
+PyYAML>=6.0
+pytest>=8.0
+# Pinned so `tools/convert.py --check` output stays stable between runs
+pySigma==1.5.1
+pySigma-backend-splunk==2.1.0
+pySigma-backend-elasticsearch==2.1.1

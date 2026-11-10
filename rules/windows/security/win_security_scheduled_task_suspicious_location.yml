@@ -1,0 +1,45 @@
+title: Scheduled Task Created That Runs From a Suspicious Location
+id: ac68749b-16e1-4d27-9f28-5fcee77b374c
+status: experimental
+description: |
+  Detects creation of a scheduled task (Security event 4698) whose action runs
+  a program from a user-writable staging folder, or launches a script host
+  commonly abused for persistence. Legitimate software installs scheduled
+  tasks under Program Files or System32, not Temp or Public.
+references:
+  - https://attack.mitre.org/techniques/T1053/005/
+  - https://learn.microsoft.com/en-us/windows/security/threat-protection/auditing/event-4698
+author: BombDiggity2454
+date: 2026-11-09
+tags:
+  - attack.persistence
+  - attack.execution
+  - attack.privilege-escalation
+  - attack.t1053.005
+logsource:
+  product: windows
+  service: security
+  definition: 'Requires "Audit Other Object Access Events" (Success) to be enabled'
+detection:
+  selection_eid:
+    EventID: 4698
+  selection_susp_path:
+    TaskContent|contains:
+      - '\AppData\Local\Temp\'
+      - '\Users\Public\'
+      - 'C:\Windows\Temp\'
+      - '\Downloads\'
+      - 'C:\PerfLogs\'
+  selection_susp_lolbin:
+    TaskContent|contains:
+      - 'mshta'
+      - 'wscript'
+      - 'cscript'
+      - 'regsvr32'
+      - '-enc '
+      - 'FromBase64String'
+  condition: selection_eid and 1 of selection_susp_*
+falsepositives:
+  - Poorly packaged in-house tools that run from Temp or Public. Fix the
+    deployment, or filter by TaskName + Author once verified.
+level: high

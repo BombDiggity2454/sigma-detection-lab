@@ -1,0 +1,3 @@
+// Scheduled Task Created That Runs From a Suspicious Location
+// source: rules/windows/security/win_security_scheduled_task_suspicious_location.yml
+source="WinEventLog:Security" EventCode=4698 TaskContent IN ("*\\AppData\\Local\\Temp\\*", "*\\Users\\Public\\*", "*C:\\Windows\\Temp\\*", "*\\Downloads\\*", "*C:\\PerfLogs\\*") OR TaskContent IN ("*mshta*", "*wscript*", "*cscript*", "*regsvr32*", "*-enc *", "*FromBase64String*")

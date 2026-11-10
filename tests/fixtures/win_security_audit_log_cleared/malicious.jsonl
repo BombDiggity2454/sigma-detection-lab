@@ -1,0 +1,1 @@
+{"_note": "Attacker clears Security log after credential dumping (wevtutil cl Security)", "Channel": "Security", "EventID": 1102, "Computer": "SRV-APP-03.corp.local", "TimeCreated": "2026-11-03T02:25:11.000Z", "SubjectUserName": "svc_backup", "SubjectDomainName": "CORP", "SubjectLogonId": "0x3e7a1f"}

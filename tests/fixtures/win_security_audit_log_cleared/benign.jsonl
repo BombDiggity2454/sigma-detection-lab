@@ -1,0 +1,2 @@
+{"_note": "System log 104 (a different log was cleared) - out of scope for this rule", "Channel": "System", "EventID": 104, "Computer": "WS-IT-01.corp.local", "TimeCreated": "2026-11-01T08:00:00.000Z", "SubjectUserName": "it_admin", "Channel_Cleared": "Application"}
+{"_note": "Event 1102 number but in the Application channel (unrelated provider)", "Channel": "Application", "EventID": 1102, "Computer": "WS-MKT-04.corp.local", "TimeCreated": "2026-11-01T08:30:00.000Z", "ProviderName": "SomeVendorApp"}

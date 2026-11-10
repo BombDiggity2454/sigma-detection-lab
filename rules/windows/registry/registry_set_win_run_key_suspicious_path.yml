@@ -1,0 +1,40 @@
+title: Run Key Persistence Pointing to Suspicious Path or Script Host
+id: 63fd5581-5dfa-4c8a-957b-f4b311859e6a
+status: experimental
+description: |
+  Detects a value written under a Run / RunOnce registry key whose data points
+  to a user-writable staging folder or invokes a script host. Run keys execute
+  at every logon, which makes them one of the most common persistence methods
+  for commodity malware and initial-access loaders.
+references:
+  - https://attack.mitre.org/techniques/T1547/001/
+author: BombDiggity2454
+date: 2026-11-09
+tags:
+  - attack.persistence
+  - attack.privilege-escalation
+  - attack.t1547.001
+logsource:
+  product: windows
+  category: registry_set
+detection:
+  selection_key:
+    # Covers Run, RunOnce, RunOnceEx under HKLM and HKU, incl. Wow6432Node
+    TargetObject|contains: '\Microsoft\Windows\CurrentVersion\Run'
+  selection_details:
+    Details|contains:
+      - '\AppData\Local\Temp\'
+      - '\Users\Public\'
+      - 'C:\Windows\Temp\'
+      - '\Downloads\'
+      - 'powershell'
+      - 'mshta'
+      - 'wscript'
+      - 'cscript'
+      - 'regsvr32'
+  condition: all of selection_*
+falsepositives:
+  - Installers that schedule a one-time RunOnce cleanup from Temp after a
+    reboot. These are usually signed and short-lived. Check the writing
+    process (Image) and whether the file still exists.
+level: medium

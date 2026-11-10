@@ -1,0 +1,36 @@
+name: detection-ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Test detections
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Engine + rule tests (true positives, false positives, metadata, playbooks)
+        run: python -m pytest -v
+
+      - name: Validate rules with pySigma and check committed SIEM queries are current
+        run: python tools/convert.py --check
+
+      - name: Check ATT&CK coverage files are current
+        run: python tools/coverage.py --check
+
+      - name: Demo - scan a sample "incident" log
+        run: python -m detlab scan samples/incident_ws-fin-07.jsonl || true

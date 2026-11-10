@@ -1,0 +1,3 @@
+// Run Key Persistence Pointing to Suspicious Path or Script Host
+// source: rules/windows/registry/registry_set_win_run_key_suspicious_path.yml
+TargetObject="*\\Microsoft\\Windows\\CurrentVersion\\Run*" Details IN ("*\\AppData\\Local\\Temp\\*", "*\\Users\\Public\\*", "*C:\\Windows\\Temp\\*", "*\\Downloads\\*", "*powershell*", "*mshta*", "*wscript*", "*cscript*", "*regsvr32*")
